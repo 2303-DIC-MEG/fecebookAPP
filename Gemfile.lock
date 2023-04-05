@@ -241,6 +241,7 @@ DEPENDENCIES
   carrierwave (>= 3.0.0.beta, < 4.0)
   jbuilder (~> 2.7)
   listen (~> 3.3)
+  mini_magick
   pg (~> 1.1)
   puma (~> 5.0)
   rack-mini-profiler (~> 2.0)
