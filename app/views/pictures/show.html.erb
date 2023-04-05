@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Title:</strong>
-  <%= @picture.title %>
+  <strong>Image:</strong>
+  <%= image_tag @picture.image.url if @picture.image && @picture.image.url  %>
 </p>
 
 <p>

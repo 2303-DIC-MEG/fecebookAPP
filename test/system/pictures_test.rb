@@ -15,7 +15,7 @@ class PicturesTest < ApplicationSystemTestCase
     click_on "New Picture"
 
     fill_in "Content", with: @picture.content
-    fill_in "Title", with: @picture.title
+    fill_in "image", with: @picture.image
     fill_in "User", with: @picture.user_id
     click_on "Create Picture"
 
@@ -28,7 +28,7 @@ class PicturesTest < ApplicationSystemTestCase
     click_on "Edit", match: :first
 
     fill_in "Content", with: @picture.content
-    fill_in "Title", with: @picture.title
+    fill_in "image", with: @picture.image
     fill_in "User", with: @picture.user_id
     click_on "Update Picture"
 

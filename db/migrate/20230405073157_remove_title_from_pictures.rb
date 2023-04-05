@@ -1,5 +1,5 @@
-class RemoveTitleFromPictures < ActiveRecord::Migration[6.1]
+class RemoveimageFromPictures < ActiveRecord::Migration[6.1]
   def change
-    remove_column :pictures, :title, :string
+    remove_column :pictures, :image, :string
   end
 end
