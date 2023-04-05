@@ -1,40 +1,41 @@
 class PicturesController < ApplicationController
   before_action :set_picture, only: %i[ show edit update destroy ]
+  before_action :ensure_correct_user, only: [:edit, :update, :destroy]
 
-  # GET /pictures or /pictures.json
   def index
     @pictures = Picture.all
   end
 
-  # GET /pictures/1 or /pictures/1.json
   def show
+    @picture = Picture.find(params[:id])
   end
 
-  # GET /pictures/new
   def new
     @picture = Picture.new
   end
 
-  # GET /pictures/1/edit
   def edit
+    @picture = Picture.find(params[:id])
   end
 
-  # POST /pictures or /pictures.json
   def create
-    @picture = Picture.new(picture_params)
+    @picture = current_user.pictures.build(picture_params)
 
     respond_to do |format|
-      if @picture.save
-        format.html { redirect_to picture_url(@picture), notice: "Picture was successfully created." }
-        format.json { render :show, status: :created, location: @picture }
+      if params[:back]
+        render :new
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @picture.errors, status: :unprocessable_entity }
+        if @picture.save
+          format.html { redirect_to picture_url(@picture), notice: "Picture was successfully created." }
+          format.json { render :show, status: :created, location: @picture }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @picture.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
 
-  # PATCH/PUT /pictures/1 or /pictures/1.json
   def update
     respond_to do |format|
       if @picture.update(picture_params)
@@ -47,7 +48,11 @@ class PicturesController < ApplicationController
     end
   end
 
-  # DELETE /pictures/1 or /pictures/1.json
+  def confirm
+    @picture = current_user.pictures.build(picture_params)
+    render :new if @picture.invalid?  
+  end
+
   def destroy
     @picture.destroy
 
@@ -58,13 +63,20 @@ class PicturesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_picture
-      @picture = Picture.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def picture_params
-      params.require(:picture).permit(:title, :content, :user_id)
+  def set_picture
+    @picture = Picture.find(params[:id])
+  end
+
+  def picture_params
+    params.require(:picture).permit(:title, :content, :user_id)
+  end
+
+  def ensure_correct_user
+    @picture = Picture.find_by(id: params[:id])
+    if @current_user.id != @picture.user_id
+      flash[:notice] = "Not collect"
+      redirect_to pictures_path
     end
+  end
 end
